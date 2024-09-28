@@ -22,7 +22,7 @@ class UserController extends Controller
 
     public function updateProfile(Request $request)
     {
-        // Validasi input
+
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . session('id'),
@@ -35,11 +35,9 @@ class UserController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // dd($request->all());
 
         $user = User::where('email', session('email'))->first();
 
-        // Update data pengguna
         $user->name = $request->input('name');
         $user->email = $request->input('email');
         $user->desc = $request->input('desc');
@@ -47,7 +45,6 @@ class UserController extends Controller
         $user->phone = $request->input('phone');
         $user->save();
 
-        // Perbarui session dengan data terbaru
         session([
             'name' => $user->name,
             'email' => $user->email,

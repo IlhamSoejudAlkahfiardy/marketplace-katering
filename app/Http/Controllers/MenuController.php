@@ -13,9 +13,13 @@ class MenuController extends Controller
     {
         $email = session('email');
         $user = User::where('email', $email)->first();
+        $menus = Menus::where('user_id', $user->id)->get();
+
+        // dd($menus);
 
         return view('menu.manage', [
-            'user' => $user
+            'user' => $user,
+            'menus' => $menus,
         ]);
     }
 
@@ -26,7 +30,6 @@ class MenuController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
             'name' => 'required|string|max:255',
             'desc' => 'required|string',
@@ -35,7 +38,6 @@ class MenuController extends Controller
         ]);
 
         // dd($request->all());
-        // Simpan data menu
         $menu = Menus::create([
             'name' => $request->name,
             'desc' => $request->desc,
@@ -43,13 +45,11 @@ class MenuController extends Controller
             'user_id' => session('id'),
         ]);
 
-        // Upload gambar
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('images/menu', 'public'); // Simpan di folder public/images
+            $path = $request->file('image')->store('images/menu', 'public'); 
 
-            // Simpan data gambar
             Pictures::create([
-                'menu_id' => $menu->id, // Mengaitkan gambar dengan menu yang baru saja dibuat
+                'menu_id' => $menu->id, 
                 'name' => $path,
             ]);
         }

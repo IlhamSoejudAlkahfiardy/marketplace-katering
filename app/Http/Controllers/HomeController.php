@@ -11,7 +11,7 @@ class HomeController extends Controller
     {
         $topMenus = Menus::select('menus.id', 'menus.name as menu_name', 'menus.desc', 'menus.price', 'pictures.name as picture_name')
             ->join('pictures', 'menus.id', '=', 'pictures.menu_id')
-            ->take(3)
+            // ->take(2)
             ->get();
         // dd($topMenus);
 
